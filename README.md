@@ -1,2 +1,6 @@
 # PiCam
-A python file that controle a PiCam, LEDs, and motion sensor.
+A python3 file that controls a Raspberry Pi camera, LEDs, and motion sensor.
+
+# Prerequisites to run script
+* sudo apt-get update
+* sudo apt-get install python3-picamera
