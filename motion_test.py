@@ -1,10 +1,11 @@
 from gpiozero import MotionSensor
 
-##Quick script to check communication between motion sensor and Pi on GPIO 4.
+##Send an email upon motion detecion
 
 pir = MotionSensor(4)
 i = 0
-while(i < 5):
+while(i < 1):
     if pir.motion_detected:
         print i , 'motion detected'
+        execfile("send_email.py")
         i+=1;
