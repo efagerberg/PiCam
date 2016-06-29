@@ -1,3 +1,4 @@
+#!/bin/sh
 apt-get update
 sudo apt-get install python3-picamera
 apt-get remove libavcodec-extra-56 libavformat56 libavresample2 libavutil54
