@@ -1,6 +1,7 @@
 import picamera
 import time
 from RPi import GPIO
+import RPi.GPIO as GPIO
 import sendgrid
 import os
 from sendgrid.helpers.mail import *
@@ -18,6 +19,18 @@ def provision_pi_camera(hflip=False, vflip=False, zoom=(0.0, 0.0, 1.0, 1.0), vid
 
 
 def rotate_servo(angle):
+    GPIO.setmode(GPIO.BOARD)
+    servoPin=11
+    GPIO.setup(servoPin, GPIO.OUT)
+    pwm=GPIO.PWM(seroPin, 50)
+    pwm.start(7)
+    for i in range(0,180):
+            desiredPosition=input("Where do you want the servo? 0-180?")
+            DC=1./18.*(desiredPosition)+2
+            pwm.ChangeDutyCycle(DC)
+        pwm.stop()
+        
+    
     print("This is where we would rotate the servo to {} degrees.".format(angle))
 
 
