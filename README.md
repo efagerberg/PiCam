@@ -18,3 +18,5 @@ Configure your enviornment
 * `echo "sendgrid.env" >> .gitignore`
 * `source ./sendgrid.env`
 
+For cloning: 
+https://github.com/efagerberg/PiCam.git
