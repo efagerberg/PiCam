@@ -17,18 +17,17 @@ def provision_pi_camera(hflip=False, vflip=False, zoom=(0.0, 0.0, 1.0, 1.0), vid
 
 
 def rotate_servo(angle):
-    GPIO.setmode(GPIO.BOARD)
-    servoPin = 11
-    GPIO.setup(servoPin, GPIO.OUT)
-    pwm = GPIO.PWM(seroPin, 50)
-    pwm.start(7)
-    for i in range(0, 180):
-        desiredPosition = input("Where do you want the servo? 0-180?")
-        DC = float(1 / 18) * (desiredPosition) + 2
-        pwm.ChangeDutyCycle(DC)
-    pwm.stop()
+	servoPin = 18
 
-    print("This is where we would rotate the servo to {} degrees.".format(angle))
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(servoPin, GPIO.OUT)
+
+	#pwm object on servo pin with 50Hz signal
+    pwm = GPIO.PWM(servoPin, 50)
+    pwm.start(7)
+
+    DC = float(1 / 18) * (angle) + 2
+    pwm.ChangeDutyCycle(DC)
 
 
 def reset_servo():
