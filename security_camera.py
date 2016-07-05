@@ -1,8 +1,8 @@
 import picamera
 from RPi import GPIO
-import sendgrid
 import os
-from sendgrid.helpers.mail import *
+import sendgrid
+from sendgrid.helpers.mail import Email, Content, Mail
 from gpiozero import MotionSensor
 from datetime import datetime
 
@@ -17,12 +17,12 @@ def provision_pi_camera(hflip=False, vflip=False, zoom=(0.0, 0.0, 1.0, 1.0), vid
 
 
 def rotate_servo(angle):
-	servoPin = 18
+    servoPin = 18
 
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(servoPin, GPIO.OUT)
 
-	#pwm object on servo pin with 50Hz signal
+    # pwm object on servo pin with 50Hz signal
     pwm = GPIO.PWM(servoPin, 50)
     pwm.start(7)
 
@@ -31,11 +31,7 @@ def rotate_servo(angle):
 
 
 def reset_servo():
-    rotate_servo(0)
-
-
-def turn_on_flood_light():
-    print("This is where we would turn the LED array on.")
+    rotate_servo(90)
 
 
 def send_email():
@@ -58,12 +54,9 @@ def main():
         while True:
             if pir.motion_detected:
                 now = datetime.now()
-                camera.capture("{}-initial.jpg".format(now.iso_format()))
-                turn_on_flood_light()
+                camera.capture("{}-middle.jpg".format(now.iso_format()))
                 rotate_servo(0)
                 camera.capture("{}-left.jpg".format(now.iso_format()))
-                rotate_servo(90)
-                camera.capture("{}-middle.jpg".format(now.iso_format()))
                 rotate_servo(180)
                 camera.capture("{}-right.jpg".format(now.iso_format()))
                 reset_servo()
