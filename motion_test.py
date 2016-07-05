@@ -1,11 +1,15 @@
-from gpiozero import MotionSensor
+#from gpiozero import MotionSensor
+import RPi.GPIO as GPIO
+import time
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(11, GPIO.IN)
 
 ##Send an email upon motion detecion
 
-pir = MotionSensor(4)
-i = 0
-while(i < 1):
-    if pir.motion_detected:
-        print i , 'motion detected'
-        execfile("send_email.py")
-        i+=1;
+#pir = MotionSensor(4)
+
+while(True):
+	i = GPIO.input(11)
+	if i==1:
+    		print 'motion detected' , i
+		time.sleep(4.1)
