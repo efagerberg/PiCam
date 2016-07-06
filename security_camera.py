@@ -5,6 +5,9 @@ import sendgrid
 from sendgrid.helpers.mail import Email, Content, Mail
 from gpiozero import MotionSensor
 from datetime import datetime
+import time
+
+SERVO_PIN = 13
 
 
 def provision_pi_camera(hflip=False, vflip=False, zoom=(0.0, 0.0, 1.0, 1.0), video_stabilization=True):
@@ -17,17 +20,19 @@ def provision_pi_camera(hflip=False, vflip=False, zoom=(0.0, 0.0, 1.0, 1.0), vid
 
 
 def rotate_servo(angle):
-    servoPin = 18
+    DC = 0
+    if angle == 90:
+        DC = 7
+    elif angle == 0:
+        DC = 2
+    elif angle == 180:
+        DC = 12
+    else:
+        raise ValueError("Accepted values for servo rotation are 0, 90, and 180.")
 
-    GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(servoPin, GPIO.OUT)
-
-    # pwm object on servo pin with 50Hz signal
-    pwm = GPIO.PWM(servoPin, 50)
-    pwm.start(7)
-
-    DC = float(1 / 18) * (angle) + 2
-    pwm.ChangeDutyCycle(DC)
+    pwm = GPIO.PWM(SERVO_PIN, 50)
+    pwm.ChangeDutyCycle(DC)   # turn towards 90 degree
+    time.sleep(1)            # sleep 1 second
 
 
 def reset_servo():
@@ -49,6 +54,12 @@ def send_email():
 
 
 def main():
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(SERVO_PIN, GPIO.OUT)
+    # pwm object on servo pin with 50Hz signal
+    pwm = GPIO.PWM(SERVO_PIN, 50)
+    pwm.start(7)
+    # ----------End of Servo Setup -------------
     pir = MotionSensor(4)
     with provision_pi_camera() as camera:
         while True:
