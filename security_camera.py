@@ -2,13 +2,13 @@ import picamera
 from RPi import GPIO
 import os
 import sendgrid
-from sendgrid.helpers.mail import Email, Content, Mail
+from sendgrid.helpers.mail import *
 from gpiozero import MotionSensor
 from datetime import datetime
 import time
 
 SERVO_PIN = 13
-
+MOTION_PIN = 11
 
 def provision_pi_camera(hflip=False, vflip=False, zoom=(0.0, 0.0, 1.0, 1.0), video_stabilization=True):
     camera = picamera.PiCamera()
@@ -44,7 +44,7 @@ def send_email():
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
     from_email = Email("SpyPi@no-reply")
     subject = "Motion Detected"
-    to_email = Email("sendToUser@example.com")
+    to_email = Email("gagnej3@wit.edu")
     content = Content("text/plain", "We have detected motion from your pi!\n\n")
     mail = Mail(from_email, subject, to_email, content)
     response = sg.client.mail.send.post(request_body=mail.get())
@@ -56,22 +56,44 @@ def send_email():
 def main():
     GPIO.setmode(GPIO.BOARD)
     GPIO.setup(SERVO_PIN, GPIO.OUT)
+    
     # pwm object on servo pin with 50Hz signal
     pwm = GPIO.PWM(SERVO_PIN, 50)
     pwm.start(7)
     # ----------End of Servo Setup -------------
-    pir = MotionSensor(4)
+    
+    GPIO.setup(MOTION_PIN,GPIO.IN)
     with provision_pi_camera() as camera:
         while True:
-            if pir.motion_detected:
-                now = datetime.now()
-                camera.capture("{}-middle.jpg".format(now.iso_format()))
-                rotate_servo(0)
-                camera.capture("{}-left.jpg".format(now.iso_format()))
-                rotate_servo(180)
-                camera.capture("{}-right.jpg".format(now.iso_format()))
-                reset_servo()
-                send_email()
+            i = GPIO.input(MOTION_PIN)
+	    if i==1:
+		print 'motion detected'
+                #pwm.start(7)
+		pwm.ChangeDutyCycle(7)
+		time.sleep(1)
+		#rotate_servo(90)
+		#time.sleep(1)
+		now = datetime.now()
+                camera.capture("{}-middle.jpg".format(now.isoformat()))
+                pwm.ChangeDutyCycle(2)
+		time.sleep(1)
+		#rotate_servo(0)
+		#time.sleep(1)
+                camera.capture("{}-left.jpg".format(now.isoformat()))
+          	pwm.ChangeDutyCycle(7)
+		time.sleep(1)
+		#rotate_servo(90)
+		#rotate_servo(180)
+		#time.sleep(1)
+                camera.capture("{}-right.jpg".format(now.isoformat()))
+                pwm.ChangeDutyCycle(12)
+		time.sleep(1)
+		pwm.ChangeDutyCycle(7)
+		time.sleep(1)
+		#rotate_servo(90)
+		#reset_servo()
+                #send_email()
+		#time.sleep(4.1)
 
 
 if __name__ == "__main__":
