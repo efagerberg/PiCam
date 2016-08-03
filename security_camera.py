@@ -52,9 +52,9 @@ def send_email(*filenames):
     mail = Mail(from_email, subject, to_email, content)
 
     for filename in filenames:
-        with open(middle, "rb") as jpg_file:
+        with open(filename, "rb") as jpg_file:
             attachment = Attachment()
-            attachment.set_filename(middle)
+            attachment.set_filename(filename)
             attachment.set_content(base64.b64encode(jpg_file.read()))
             attachment.set_type('image/jpg')
             mail.add_attachment(attachment)
