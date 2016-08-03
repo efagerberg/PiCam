@@ -53,11 +53,11 @@ def send_email(*filenames):
 
     for filename in filenames:
         with open(middle, "rb") as jpg_file:
-            middle_attachment = Attachment()
-            middle_attachment.set_filename(middle)
-            middle_attachment.set_content(base64.b64encode(jpg_file.read()))
-            middle_attachment.set_type('image/jpg')
-            mail.add_attachment(middle_attachment)
+            attachment = Attachment()
+            attachment.set_filename(middle)
+            attachment.set_content(base64.b64encode(jpg_file.read()))
+            attachment.set_type('image/jpg')
+            mail.add_attachment(attachment)
 
     response = sg.client.mail.send.post(request_body=mail.get())
     print(response.status_code)
