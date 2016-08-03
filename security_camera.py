@@ -40,6 +40,7 @@ def reset_servo():
     rotate_servo(90)
 
 
+
 def send_email(middle, left, right):
     # This function will need to take in pictures and add them as attachments.
     sg = sendgrid.SendGridAPIClient(apikey=os.environ.get('SENDGRID_API_KEY'))
@@ -49,12 +50,12 @@ def send_email(middle, left, right):
     to_email = Email("gagnej3@wit.edu")
     content = Content("text/plain", "We have detected motion from your pi!\n\n")
     mail = Mail(from_email, subject, to_email, content)
-    # middle_attachment = Attachment()
-    # middle_attachment.set_filename(middle)
-    # middle_attachment.set_content("Test1")
-    # middle_attachment.set_type('image/jpeg')
-    # middle_attachment.set_disposition("attachment")
-    # middle_attachment.set_content_id("Middle")
+    middle_attachment = Attachment()
+    middle_attachment.set_filename(middle)
+    middle_attachment.set_content("Test1")
+    middle_attachment.set_type('image/jpg')
+    middle_attachment.set_disposition("attachment")
+    middle_attachment.set_content_id("Middle")
     # mail.add_attachment(middle_attachment)
     # left_attachment = Attachment()
     # left_attachment.set_filename(left)
@@ -62,7 +63,7 @@ def send_email(middle, left, right):
     # left_attachment.set_type('image/jpeg')
     # left_attachment.set_disposition("attachment")
     # left_attachment.set_content_id("Left")
-    # mail.add_attachment(left_attachment)
+    # #mail.add_attachment(left_attachment)
     # right_attachment = Attachment()
     # right_attachment.set_filename(right)
     # right_attachment.set_content("Test3")
@@ -70,6 +71,8 @@ def send_email(middle, left, right):
     # right_attachment.set_disposition("attachment")
     # right_attachment.set_content_id("Right")
     # mail.add_attachment(right_attachment)
+
+
     response = sg.client.mail.send.post(request_body=mail.get())
     print(response.status_code)
     print(response.body)
